@@ -33,6 +33,10 @@ export class AdminPageComponent implements OnInit {
       display: 'Sessions',
     },
     {
+      url: '/web/admin/dashboard',
+      display: 'Dashboard',
+    },
+    {
       url: '/web/admin/timezone',
       display: 'Timezone Listing',
     },
