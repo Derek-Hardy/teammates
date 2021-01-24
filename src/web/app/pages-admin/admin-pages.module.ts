@@ -38,6 +38,14 @@ const routes: Routes = [
     },
   },
   {
+    path: 'dashboard',
+    loadChildren: () => import('./admin-dashboard-page/admin-dashboard-page.module')
+        .then((m: any) => m.AdminDashboardPageModule),
+    data: {
+      pageTitle: 'Feedback responses statistics',
+    },
+  },
+  {
     path: 'timezone',
     loadChildren: () => import('./admin-timezone-page/admin-timezone-page.module')
         .then((m: any) => m.AdminTimezonePageModule),

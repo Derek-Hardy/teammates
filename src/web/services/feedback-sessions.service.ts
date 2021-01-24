@@ -16,6 +16,7 @@ import {
   HasResponses,
   MessageOutput,
   OngoingSessions,
+  ResponseSubmissionStats,
   SessionLinksRecoveryResponse,
   SessionResults,
 } from '../types/api-output';
@@ -228,6 +229,18 @@ export class FeedbackSessionsService {
     };
 
     return this.httpRequestService.post(ResourceEndpoints.SESSION_REMIND_RESULT, paramMap, request);
+  }
+
+  /**
+   * Gets the number of new response submissions in each hour of the past 12 hours for the session.
+   */
+  getRecentResponseSubmissionStats(courseId: string, feedbackSessionName: string):
+      Observable<ResponseSubmissionStats> {
+    const paramMap: Record<string, string> = {
+      courseid: courseId,
+      fsname: feedbackSessionName,
+    };
+    return this.httpRequestService.get(ResourceEndpoints.SESSION_RESPONSE_SUBMISSION_STATS, paramMap);
   }
 
   /**

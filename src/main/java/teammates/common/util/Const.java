@@ -272,6 +272,7 @@ public final class Const {
         public static final String SESSION_PUBLISH = URI_PREFIX + "/session/publish";
         public static final String SESSION_REMIND_SUBMISSION = URI_PREFIX + "/session/remind/submission";
         public static final String SESSION_REMIND_RESULT = URI_PREFIX + "/session/remind/result";
+        public static final String SESSION_RESPONSE_SUBMISSION_STATS = URI_PREFIX + "/session/response/submission/stats";
         public static final String SESSION_STATS = URI_PREFIX + "/session/stats";
         public static final String SESSION_SUBMITTED_GIVER_SET = URI_PREFIX + "/session/submitted/giverset";
         public static final String SESSIONS = URI_PREFIX + "/sessions";

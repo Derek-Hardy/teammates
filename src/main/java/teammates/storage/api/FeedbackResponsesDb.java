@@ -3,6 +3,7 @@ package teammates.storage.api;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -54,6 +55,14 @@ public class FeedbackResponsesDb extends EntitiesDb<FeedbackResponse, FeedbackRe
         }
 
         return giverSet;
+    }
+
+    /**
+     * Gets a list of numbers of new response submissions made in the past 12 hours under a feedback session.
+     */
+    public List<Integer> getRecentResponseSubmissionStats(String courseId, String feedbackSessionName) {
+        // TODO: data query
+        return Arrays.asList(1, 2, 3);
     }
 
     /**
