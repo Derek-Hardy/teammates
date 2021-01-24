@@ -116,6 +116,16 @@
             D3 graph placeholder
           </p>
           <!-- TODO: add D3 graph here -->
+          <table class="table table-striped data-table session-table" id="ongoing-sessions-table">
+            <thead>
+              [{{ mapping.key }}]
+            </thead>
+            <tbody>
+            <tr *ngFor="let session of mapping.value">
+              <td>{{ stats[mapping.key].data }}</td>
+            </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

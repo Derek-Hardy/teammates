@@ -4,7 +4,10 @@ import { finalize } from 'rxjs/operators';
 import { FeedbackSessionsService } from '../../../services/feedback-sessions.service';
 import { StatusMessageService } from '../../../services/status-message.service';
 import { TimezoneService } from '../../../services/timezone.service';
-import { OngoingSession, OngoingSessions } from '../../../types/api-output';
+import {
+  OngoingSession,
+  OngoingSessions,
+  ResponseSubmissionStats } from '../../../types/api-output';
 import { collapseAnim } from '../../components/teammates-common/collapse-anim';
 import { ErrorMessageOutput } from '../../error-message-output';
 
@@ -21,6 +24,7 @@ export class AdminDashboardPageComponent implements OnInit {
 
   totalOngoingSessions: number = 0;
   sessions: Record<string, OngoingSession[]> = {};
+  stats: Record<string, ResponseSubmissionStats> = {};
 
   // Tracks the whether the panel of an institute has been opened
   institutionPanelsStatus: Record<string, boolean> = {};
@@ -88,6 +92,14 @@ export class AdminDashboardPageComponent implements OnInit {
           Object.keys(resp.sessions).forEach((key: string) => {
             this.sessions[key] = resp.sessions[key];
             // TODO: retrieve response submission stats through API
+            for (const fs of this.sessions[key]) {
+              this.feedbackSessionsService.getRecentResponseSubmissionStats(fs.courseId, fs.feedbackSessionName)
+                  .subscribe((rss: ResponseSubmissionStats) => {
+                    this.stats[key] = rss;
+                  }, (error: ErrorMessageOutput) => {
+                    this.statusMessageService.showErrorToast(error.error.message);
+                  });
+            }
           });
 
           this.institutionPanelsStatus = {};
