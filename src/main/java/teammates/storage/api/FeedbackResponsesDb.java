@@ -2,8 +2,10 @@ package teammates.storage.api;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -60,9 +62,53 @@ public class FeedbackResponsesDb extends EntitiesDb<FeedbackResponse, FeedbackRe
     /**
      * Gets a list of numbers of new response submissions made in the past 12 hours under a feedback session.
      */
-    public List<Integer> getRecentResponseSubmissionStats(String courseId, String feedbackSessionName) {
-        // TODO: data query
-        return Arrays.asList(1, 2, 3);
+    public List<String> getRecentResponseSubmissionStats(String courseId, String feedbackSessionName) {
+        Assumption.assertNotNull(courseId);
+        Assumption.assertNotNull(feedbackSessionName);
+
+        List<Key<FeedbackResponse>> keysOfResponses =
+                load().filter("courseId =", courseId)
+                        .filter("feedbackSessionName =", feedbackSessionName)
+                        .keys()
+                        .list();
+
+        // the following process makes use of the key pattern of feedback response entity
+        // see generateId() in FeedbackResponse.java
+        Instant now = Instant.now();
+        int[] stats = new int[13];
+
+        for (Key<FeedbackResponse> key : keysOfResponses) {
+            String[] tokens = key.getName().split("%");
+            if (tokens.length >= 4) {
+                Instant time = Instant.parse(tokens[3]);
+                for (int hour = 1; hour <= 12; hour++) {
+                    Instant limit = now.minus(hour, ChronoUnit.HOURS);
+                    int val = time.compareTo(limit);
+                    if (val >= 0) {
+                        stats[hour]++;
+                        break;
+                    }
+                }
+            }
+        }
+
+        List<String> res = new ArrayList<>();
+        String minutePad = ":00";
+        String secondPad = ":00";
+        String timePad = "0";
+
+        for (int i = 1; i <= 12; i++) {
+            String formatHour;
+            int hour = now.minus(i, ChronoUnit.HOURS).atZone(ZoneOffset.UTC).getHour();
+            if (hour < 10) {
+                formatHour = timePad + hour + minutePad + secondPad;
+            } else {
+                formatHour = hour + minutePad + secondPad;
+            }
+            res.add(formatHour + "%" + stats[i]);
+        }
+
+        return res;
     }
 
     /**
@@ -80,13 +126,14 @@ public class FeedbackResponsesDb extends EntitiesDb<FeedbackResponse, FeedbackRe
      * Gets a feedback response by unique constraint question-giver-receiver.
      */
     public FeedbackResponseAttributes getFeedbackResponse(
-            String feedbackQuestionId, String giverEmail, String receiverEmail) {
+            String feedbackQuestionId, String giverEmail, String receiverEmail, String createdTime) {
         Assumption.assertNotNull(feedbackQuestionId);
         Assumption.assertNotNull(giverEmail);
         Assumption.assertNotNull(receiverEmail);
 
         FeedbackResponse fr =
-                getFeedbackResponseEntity(FeedbackResponse.generateId(feedbackQuestionId, giverEmail, receiverEmail));
+                getFeedbackResponseEntity(
+                        FeedbackResponse.generateId(feedbackQuestionId, giverEmail, receiverEmail, createdTime));
 
         return makeAttributesOrNull(fr);
     }
@@ -418,7 +465,8 @@ public class FeedbackResponsesDb extends EntitiesDb<FeedbackResponse, FeedbackRe
         return !load()
                 .filterKey(Key.create(FeedbackResponse.class,
                         FeedbackResponse.generateId(entityToCreate.getFeedbackQuestionId(),
-                                entityToCreate.getGiver(), entityToCreate.getRecipient())))
+                                entityToCreate.getGiver(), entityToCreate.getRecipient(),
+                                entityToCreate.getCreatedAt().toString())))
                 .list()
                 .isEmpty();
     }

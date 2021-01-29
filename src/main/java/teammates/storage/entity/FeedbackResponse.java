@@ -23,7 +23,7 @@ public class FeedbackResponse extends BaseEntity {
     /**
      * The unique id of the entity.
      *
-     * @see #generateId(String, String, String)
+     * @see #generateId(String, String, String, String)
      */
     @Id
     private String feedbackResponseId;
@@ -76,19 +76,19 @@ public class FeedbackResponse extends BaseEntity {
         this.receiverSection = recipientSection;
         setAnswer(answer);
 
-        this.feedbackResponseId = generateId(feedbackQuestionId, giverEmail, receiver);
-
         this.setCreatedAt(Instant.now());
+
+        this.feedbackResponseId = generateId(feedbackQuestionId, giverEmail, receiver, createdAt.toString());
     }
 
     /**
      * Generates an unique ID for the feedback response.
      */
-    public static String generateId(String feedbackQuestionId, String giver, String receiver) {
+    public static String generateId(String feedbackQuestionId, String giver, String receiver, String createdTime) {
         // Format is feedbackQuestionId%giverEmail%receiver
         // i.e. if response is feedback for team: qnId%giver@gmail.com%Team1
         //         if response is feedback for person: qnId%giver@gmail.com%reciever@email.com
-        return feedbackQuestionId + '%' + giver + '%' + receiver;
+        return feedbackQuestionId + '%' + giver + '%' + receiver + '%' + createdTime;
     }
 
     public String getId() {

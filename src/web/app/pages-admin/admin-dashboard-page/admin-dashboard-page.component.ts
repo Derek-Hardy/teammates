@@ -24,7 +24,7 @@ export class AdminDashboardPageComponent implements OnInit {
 
   totalOngoingSessions: number = 0;
   sessions: Record<string, OngoingSession[]> = {};
-  stats: Record<string, ResponseSubmissionStats> = {};
+  stats: any[] = [];
 
   // Tracks the whether the panel of an institute has been opened
   institutionPanelsStatus: Record<string, boolean> = {};
@@ -38,20 +38,20 @@ export class AdminDashboardPageComponent implements OnInit {
   endDate: any = {};
   endTime: any = {};
 
-  dashboardData: any[] = [
-    { time: '11:00:00', total: '40' },
-    { time: '12:00:00', total: '22' },
-    { time: '13:00:00', total: '32' },
-    { time: '14:00:00', total: '25' },
-    { time: '15:00:00', total: '30' },
-    { time: '16:00:00', total: '8' },
-    { time: '17:00:00', total: '0' },
-    { time: '18:00:00', total: '0' },
-    { time: '19:00:00', total: '0' },
-    { time: '20:00:00', total: '15' },
-    { time: '21:00:00', total: '16' },
-    { time: '22:00:00', total: '17' },
-  ];
+//   dashboardData: any[] = [
+//     { time: '11:00:00', total: '40' },
+//     { time: '12:00:00', total: '22' },
+//     { time: '13:00:00', total: '32' },
+//     { time: '14:00:00', total: '25' },
+//     { time: '15:00:00', total: '30' },
+//     { time: '16:00:00', total: '8' },
+//     { time: '17:00:00', total: '0' },
+//     { time: '18:00:00', total: '0' },
+//     { time: '19:00:00', total: '0' },
+//     { time: '20:00:00', total: '15' },
+//     { time: '21:00:00', total: '16' },
+//     { time: '22:00:00', total: '17' },
+//   ];
 
   isLoadingOngoingSessions: boolean = false;
 
@@ -106,11 +106,13 @@ export class AdminDashboardPageComponent implements OnInit {
           this.totalOngoingSessions = resp.totalOngoingSessions;
           Object.keys(resp.sessions).forEach((key: string) => {
             this.sessions[key] = resp.sessions[key];
-            // TODO: retrieve response submission stats through API
             for (const fs of this.sessions[key]) {
               this.feedbackSessionsService.getRecentResponseSubmissionStats(fs.courseId, fs.feedbackSessionName)
                   .subscribe((rss: ResponseSubmissionStats) => {
-                    this.stats[key] = rss;
+                    for (const stat of rss.data) {
+                      const res: string[] = stat.split('%');
+                      this.stats.push({ time: res[0], total: res[1] });
+                    }
                   }, (error: ErrorMessageOutput) => {
                     this.statusMessageService.showErrorToast(error.error.message);
                   });

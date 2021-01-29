@@ -56,7 +56,7 @@ public final class FeedbackResponsesLogic {
     /**
      * Gets a list of numbers of new response submissions made in the past 12 hours under a feedback session.
      */
-    public List<Integer> getRecentResponseSubmissionStats(String courseId, String feedbackSessionName) {
+    public List<String> getRecentResponseSubmissionStats(String courseId, String feedbackSessionName) {
         return frDb.getRecentResponseSubmissionStats(courseId, feedbackSessionName);
     }
 
@@ -84,8 +84,8 @@ public final class FeedbackResponsesLogic {
      * Gets a feedback response by its unique key.
      */
     public FeedbackResponseAttributes getFeedbackResponse(
-            String feedbackQuestionId, String giverEmail, String recipient) {
-        return frDb.getFeedbackResponse(feedbackQuestionId, giverEmail, recipient);
+            String feedbackQuestionId, String giverEmail, String recipient, String createdTime) {
+        return frDb.getFeedbackResponse(feedbackQuestionId, giverEmail, recipient, createdTime);
     }
 
     /**

@@ -122,10 +122,7 @@
             <tbody>
             <tr *ngFor="let session of mapping.value; let i = index">
               <td>
-                {{ stats[mapping.key].data }}
-              </td>
-              <td>
-                <tm-session-dashboard [data]="dashboardData"></tm-session-dashboard>
+                <tm-session-dashboard [data]="stats"></tm-session-dashboard>
               </td>
             </tr>
             </tbody>

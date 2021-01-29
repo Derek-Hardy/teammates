@@ -48,7 +48,9 @@ public class FeedbackResponseAttributes extends EntityAttributes<FeedbackRespons
 
         this.giverSection = Const.DEFAULT_SECTION;
         this.recipientSection = Const.DEFAULT_SECTION;
-        this.feedbackResponseId = FeedbackResponse.generateId(feedbackQuestionId, giver, recipient);
+        this.createdAt = Instant.now();
+        this.feedbackResponseId =
+                FeedbackResponse.generateId(feedbackQuestionId, giver, recipient, createdAt.toString());
     }
 
     public FeedbackResponseAttributes(FeedbackResponseAttributes copy) {
@@ -67,8 +69,7 @@ public class FeedbackResponseAttributes extends EntityAttributes<FeedbackRespons
 
     public static FeedbackResponseAttributes valueOf(FeedbackResponse fr) {
         FeedbackResponseAttributes fra =
-                new FeedbackResponseAttributes(
-                        fr.getFeedbackQuestionId(), fr.getGiverEmail(), fr.getRecipientEmail());
+                new FeedbackResponseAttributes(fr.getFeedbackQuestionId(), fr.getGiverEmail(), fr.getRecipientEmail());
 
         fra.feedbackResponseId = fr.getId();
         fra.feedbackSessionName = fr.getFeedbackSessionName();
