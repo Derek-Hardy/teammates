@@ -6,6 +6,7 @@ import { NgbDatepickerModule, NgbTimepickerModule } from '@ng-bootstrap/ng-boots
 import { LoadingSpinnerModule } from '../../components/loading-spinner/loading-spinner.module';
 import { PanelChevronModule } from '../../components/panel-chevron/panel-chevron.module';
 import { AdminDashboardPageComponent } from './admin-dashboard-page.component';
+import { SessionDashboardComponent } from './session-dashboard/session-dashboard.component';
 
 const routes: Routes = [
   {
@@ -20,9 +21,11 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     AdminDashboardPageComponent,
+    SessionDashboardComponent,
   ],
   exports: [
     AdminDashboardPageComponent,
+    SessionDashboardComponent,
   ],
   imports: [
     CommonModule,

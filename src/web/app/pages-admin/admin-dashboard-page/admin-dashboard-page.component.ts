@@ -38,6 +38,21 @@ export class AdminDashboardPageComponent implements OnInit {
   endDate: any = {};
   endTime: any = {};
 
+  dashboardData: any[] = [
+    { time: '11:00:00', total: '40' },
+    { time: '12:00:00', total: '22' },
+    { time: '13:00:00', total: '32' },
+    { time: '14:00:00', total: '25' },
+    { time: '15:00:00', total: '30' },
+    { time: '16:00:00', total: '8' },
+    { time: '17:00:00', total: '0' },
+    { time: '18:00:00', total: '0' },
+    { time: '19:00:00', total: '0' },
+    { time: '20:00:00', total: '15' },
+    { time: '21:00:00', total: '16' },
+    { time: '22:00:00', total: '17' },
+  ];
+
   isLoadingOngoingSessions: boolean = false;
 
   constructor(private timezoneService: TimezoneService,
