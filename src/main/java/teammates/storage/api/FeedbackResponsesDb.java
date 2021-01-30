@@ -3,10 +3,12 @@ package teammates.storage.api;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import java.time.Instant;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -23,6 +25,7 @@ import teammates.common.exception.EntityAlreadyExistsException;
 import teammates.common.exception.EntityDoesNotExistException;
 import teammates.common.exception.InvalidParametersException;
 import teammates.common.util.Assumption;
+import teammates.common.util.Logger;
 import teammates.storage.entity.FeedbackResponse;
 
 /**
@@ -32,6 +35,8 @@ import teammates.storage.entity.FeedbackResponse;
  * @see FeedbackResponseAttributes
  */
 public class FeedbackResponsesDb extends EntitiesDb<FeedbackResponse, FeedbackResponseAttributes> {
+
+    private static final Logger log = Logger.getLogger();
 
     /**
      * Gets a set of giver identifiers that has at least one response under a feedback session.
@@ -94,17 +99,17 @@ public class FeedbackResponsesDb extends EntitiesDb<FeedbackResponse, FeedbackRe
 
         List<String> res = new ArrayList<>();
         String minutePad = ":00";
-        String secondPad = ":00";
         String timePad = "0";
 
-        for (int i = 1; i <= 12; i++) {
+        for (int i = 12; i >= 1; i--) {
             String formatHour;
-            int hour = now.minus(i, ChronoUnit.HOURS).atZone(ZoneOffset.UTC).getHour();
+            int hour = now.minus(i, ChronoUnit.HOURS).atZone(ZoneId.of("Asia/Singapore")).getHour();
             if (hour < 10) {
-                formatHour = timePad + hour + minutePad + secondPad;
+                formatHour = timePad + hour + minutePad;
             } else {
-                formatHour = hour + minutePad + secondPad;
+                formatHour = hour + minutePad;
             }
+            log.info("formatHour: " + formatHour + " total :" + stats[i]);
             res.add(formatHour + "%" + stats[i]);
         }
 

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import * as d3 from 'd3';
 
 /**
@@ -9,7 +9,7 @@ import * as d3 from 'd3';
   templateUrl: './session-dashboard.component.html',
   styleUrls: ['./session-dashboard.component.scss'],
 })
-export class SessionDashboardComponent implements OnInit {
+export class SessionDashboardComponent implements OnInit, OnChanges {
 
   @Input() data: any[] = [];
   // @Input() barId: string = '';
@@ -21,6 +21,10 @@ export class SessionDashboardComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    this.drawBars(this.data);
+  }
+
+  ngOnChanges(): void {
     this.drawBars(this.data);
   }
 
@@ -69,22 +73,4 @@ export class SessionDashboardComponent implements OnInit {
       .attr('height', (d: any) => this.height - y(d.total))
       .attr('fill', '#d04a35');
   }
-
-//   private dataHandler(data: any) {
-//     var today = new Date();
-//     today.setHours(0, 0, 0, 0);
-//     var todayMillis = today.getTime();
-//
-//     data.forEach((d: any) => {
-//       var parts = d.time.split(/:/);
-//       var timePeriodMillis = (parseInt(parts[0], 10) * 60 * 60 * 1000) +
-//                              (parseInt(parts[1], 10) * 60 * 1000) +
-//                              (parseInt(parts[2], 10) * 1000);
-//
-//       d.time = new Date();
-//       d.time.setTime(todayMillis + timePeriodMillis);
-//     });
-//
-//     return data;
-//   }
 }
