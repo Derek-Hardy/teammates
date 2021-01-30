@@ -232,7 +232,8 @@ public class StudentsLogicTest extends BaseLogicTest {
                         Integer.parseInt(responseToBeDeleted.feedbackQuestionId));
         responseToBeDeleted =
                 frLogic.getFeedbackResponse(feedbackQuestionInDb.getId(),
-                        responseToBeDeleted.giver, responseToBeDeleted.recipient);
+                        responseToBeDeleted.giver, responseToBeDeleted.recipient,
+                        responseToBeDeleted.getCreatedAt().toString());
 
         // response exist
         assertNotNull(responseToBeDeleted);
@@ -244,7 +245,8 @@ public class StudentsLogicTest extends BaseLogicTest {
 
         responseToBeDeleted =
                 frLogic.getFeedbackResponse(feedbackQuestionInDb.getId(),
-                        responseToBeDeleted.giver, responseToBeDeleted.recipient);
+                        responseToBeDeleted.giver, responseToBeDeleted.recipient,
+                        responseToBeDeleted.getCreatedAt().toString());
 
         // response should not exist
         assertNull(responseToBeDeleted);
@@ -507,7 +509,7 @@ public class StudentsLogicTest extends BaseLogicTest {
         FeedbackResponseAttributes fra = dataBundle.feedbackResponses.get("response1ForQ1S1C2");
         int qnNumber = Integer.parseInt(fra.feedbackQuestionId);
         String qnId = fqLogic.getFeedbackQuestion(fra.feedbackSessionName, fra.courseId, qnNumber).getId();
-        fra = frLogic.getFeedbackResponse(qnId, fra.giver, fra.recipient);
+        fra = frLogic.getFeedbackResponse(qnId, fra.giver, fra.recipient, fra.getCreatedAt().toString());
         assertNotNull(fra);
         // the team is the recipient of the response
         assertEquals(student2InCourse2.getTeam(), fra.recipient);

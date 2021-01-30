@@ -606,7 +606,8 @@ public class FeedbackQuestionsLogicTest extends BaseLogicTest {
         FeedbackResponseAttributes fra = dataBundle.feedbackResponses.get("response1ForQ1S1C1");
         FeedbackQuestionAttributes fqa =
                 fqLogic.getFeedbackQuestion(fra.feedbackSessionName, fra.courseId, Integer.parseInt(fra.feedbackQuestionId));
-        FeedbackResponseAttributes responseInDb = frLogic.getFeedbackResponse(fqa.getId(), fra.giver, fra.recipient);
+        FeedbackResponseAttributes responseInDb
+                = frLogic.getFeedbackResponse(fqa.getId(), fra.giver, fra.recipient, fra.getCreatedAt().toString());
         assertNotNull(responseInDb);
 
         // the student only gives this response for the session
