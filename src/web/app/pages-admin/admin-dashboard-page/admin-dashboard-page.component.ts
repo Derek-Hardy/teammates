@@ -29,7 +29,7 @@ export class AdminDashboardPageComponent implements OnInit {
   // Tracks the whether the panel of an institute has been opened
   institutionPanelsStatus: Record<string, boolean> = {};
 
-  showFilter: boolean = false;
+  showFilter: boolean = true;
   timezones: string[] = [];
   filterTimezone: string = '';
   tableTimezone: string = '';

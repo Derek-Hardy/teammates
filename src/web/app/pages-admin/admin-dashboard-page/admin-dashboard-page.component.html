@@ -1,7 +1,7 @@
 <h4>
   <small>
-    Below displays new feedback responses submissions made in the past 12 hours.
-    The statistics are summarised in time-series graph for ongoing sessions.
+    New feedback responses submissions made in the past 12 hours are displayed below.
+    Statistics for ongoing sessions are summarised in time-series graph.
   </small>
   <br>
 </h4>
@@ -116,7 +116,12 @@
             <tbody>
             <tr *ngFor="let session of mapping.value; let i = index">
               <td>
-                <tm-session-dashboard [data]="stats"></tm-session-dashboard>
+                <div class="session-identifier">
+                  {{ mapping.value[i].courseId + " " + mapping.value[i].feedbackSessionName }}
+                </div>
+                <div>
+                  <tm-session-dashboard [data]="stats"></tm-session-dashboard>
+                </div>
               </td>
             </tr>
             </tbody>
