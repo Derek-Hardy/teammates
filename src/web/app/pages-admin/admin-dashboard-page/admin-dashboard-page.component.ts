@@ -24,12 +24,12 @@ export class AdminDashboardPageComponent implements OnInit {
 
   totalOngoingSessions: number = 0;
   sessions: Record<string, OngoingSession[]> = {};
-  stats: Record<string, ResponseSubmissionStats> = {};
+  stats: any[] = [];
 
   // Tracks the whether the panel of an institute has been opened
   institutionPanelsStatus: Record<string, boolean> = {};
 
-  showFilter: boolean = false;
+  showFilter: boolean = true;
   timezones: string[] = [];
   filterTimezone: string = '';
   tableTimezone: string = '';
@@ -91,11 +91,13 @@ export class AdminDashboardPageComponent implements OnInit {
           this.totalOngoingSessions = resp.totalOngoingSessions;
           Object.keys(resp.sessions).forEach((key: string) => {
             this.sessions[key] = resp.sessions[key];
-            // TODO: retrieve response submission stats through API
             for (const fs of this.sessions[key]) {
               this.feedbackSessionsService.getRecentResponseSubmissionStats(fs.courseId, fs.feedbackSessionName)
                   .subscribe((rss: ResponseSubmissionStats) => {
-                    this.stats[key] = rss;
+                    for (const stat of rss.data) {
+                      const res: string[] = stat.split('%');
+                      this.stats.push({ time: res[0], total: res[1] });
+                    }
                   }, (error: ErrorMessageOutput) => {
                     this.statusMessageService.showErrorToast(error.error.message);
                   });

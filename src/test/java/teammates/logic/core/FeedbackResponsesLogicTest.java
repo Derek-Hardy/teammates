@@ -126,9 +126,10 @@ public class FeedbackResponsesLogicTest extends BaseLogicTest {
 
         assertEquals(responseToUpdate.toString(),
                 frLogic.getFeedbackResponse(responseToUpdate.feedbackQuestionId, responseToUpdate.giver,
-                responseToUpdate.recipient).toString());
+                responseToUpdate.recipient, responseToUpdate.getCreatedAt().toString()).toString());
         assertNull(frLogic.getFeedbackResponse(
-                responseToUpdate.feedbackQuestionId, responseToUpdate.giver, "student2InCourse1@gmail.tmt"));
+                responseToUpdate.feedbackQuestionId, responseToUpdate.giver,
+                "student2InCourse1@gmail.tmt", responseToUpdate.getCreatedAt().toString()));
 
         ______TS("success: both giver and recipient changed (teammate changed response)");
 
@@ -137,7 +138,8 @@ public class FeedbackResponsesLogicTest extends BaseLogicTest {
         responseToUpdate.recipient = "Team 1.1";
 
         assertNotNull(frLogic.getFeedbackResponse(
-                responseToUpdate.feedbackQuestionId, "student4InCourse1@gmail.tmt", "Team 1.2"));
+                responseToUpdate.feedbackQuestionId,
+                "student4InCourse1@gmail.tmt", "Team 1.2", responseToUpdate.getCreatedAt().toString()));
 
         frLogic.updateFeedbackResponseCascade(
                 FeedbackResponseAttributes.updateOptionsBuilder(responseToUpdate.getId())
@@ -147,9 +149,10 @@ public class FeedbackResponsesLogicTest extends BaseLogicTest {
 
         assertEquals(responseToUpdate.toString(),
                 frLogic.getFeedbackResponse(responseToUpdate.feedbackQuestionId, responseToUpdate.giver,
-                responseToUpdate.recipient).toString());
+                responseToUpdate.recipient, responseToUpdate.getCreatedAt().toString()).toString());
         assertNull(frLogic.getFeedbackResponse(
-                responseToUpdate.feedbackQuestionId, "student4InCourse1@gmail.tmt", "Team 1.2"));
+                responseToUpdate.feedbackQuestionId, "student4InCourse1@gmail.tmt",
+                "Team 1.2", responseToUpdate.getCreatedAt().toString()));
 
         ______TS("success: update giver, recipient, giverSection and recipientSection, "
                 + "should do cascade update to comments");
@@ -824,7 +827,7 @@ public class FeedbackResponsesLogicTest extends BaseLogicTest {
         }
 
         return frLogic.getFeedbackResponse(
-                qnId, response.giver, response.recipient);
+                qnId, response.giver, response.recipient, response.getCreatedAt().toString());
     }
 
     private FeedbackResponseAttributes getResponseFromDatastore(String jsonId) {

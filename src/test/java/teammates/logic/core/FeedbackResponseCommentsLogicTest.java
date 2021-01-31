@@ -416,7 +416,8 @@ public class FeedbackResponseCommentsLogicTest extends BaseLogicTest {
         response = frLogic.getFeedbackResponse(
                                    getQuestionIdInDataBundle(questionInDataBundle),
                                    response.giver,
-                                   response.recipient);
+                                   response.recipient,
+                                   response.getCreatedAt().toString());
         return response.getId();
     }
 }

@@ -807,7 +807,7 @@ public class FeedbackSessionsLogicTest extends BaseLogicTest {
         }
 
         return frLogic.getFeedbackResponse(questionId,
-                response.giver, response.recipient);
+                response.giver, response.recipient, response.getCreatedAt().toString());
     }
 
     private void unpublishAllSessions() throws InvalidParametersException, EntityDoesNotExistException {

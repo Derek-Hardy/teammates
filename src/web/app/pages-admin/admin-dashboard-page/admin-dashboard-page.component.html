@@ -1,7 +1,7 @@
 <h4>
   <small>
-    Below displays new feedback responses submissions made in the past 12 hours.
-    The statistics are summarised in time-series graph for ongoing sessions.
+    New feedback responses submissions made in the past 12 hours are displayed below.
+    Statistics for ongoing sessions are summarised in time-series graph.
   </small>
   <br>
 </h4>
@@ -112,17 +112,17 @@
       </div>
       <div class="card-body session-table-body" *ngIf="institutionPanelsStatus[mapping.key]" @collapseAnim>
         <div class="table-responsive">
-          <p style="text-align: center; padding: 10px;">
-            D3 graph placeholder
-          </p>
-          <!-- TODO: add D3 graph here -->
           <table class="table table-striped data-table session-table" id="ongoing-sessions-table">
-            <thead>
-              [{{ mapping.key }}]
-            </thead>
             <tbody>
-            <tr *ngFor="let session of mapping.value">
-              <td>{{ stats[mapping.key].data }}</td>
+            <tr *ngFor="let session of mapping.value; let i = index">
+              <td>
+                <div class="session-identifier">
+                  {{ mapping.value[i].courseId + " " + mapping.value[i].feedbackSessionName }}
+                </div>
+                <div>
+                  <tm-session-dashboard [data]="stats"></tm-session-dashboard>
+                </div>
+              </td>
             </tr>
             </tbody>
           </table>

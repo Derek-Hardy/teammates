@@ -561,7 +561,8 @@ public class CoursesLogicTest extends BaseLogicTest {
                 fqLogic.getFeedbackQuestion(typicalResponse.feedbackSessionName, typicalResponse.courseId,
                         Integer.parseInt(typicalResponse.feedbackQuestionId));
         typicalResponse = frLogic
-                .getFeedbackResponse(typicalQuestion.getId(), typicalResponse.giver, typicalResponse.recipient);
+                .getFeedbackResponse(typicalQuestion.getId(), typicalResponse.giver,
+                        typicalResponse.recipient, typicalResponse.getCreatedAt().toString());
         verifyPresentInDatastore(typicalResponse);
         FeedbackResponseCommentAttributes typicalComment =
                 dataBundle.feedbackResponseComments.get("comment1FromT1C1ToR1Q1S1C1");

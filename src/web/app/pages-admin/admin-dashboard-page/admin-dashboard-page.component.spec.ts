@@ -5,6 +5,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LoadingSpinnerModule } from '../../components/loading-spinner/loading-spinner.module';
 import { PanelChevronModule } from '../../components/panel-chevron/panel-chevron.module';
 import { AdminDashboardPageComponent } from './admin-dashboard-page.component';
+import { SessionDashboardComponent } from './session-dashboard/session-dashboard.component';
 
 describe('AdminDashboardPageComponent', () => {
   let component: AdminDashboardPageComponent;
@@ -19,7 +20,7 @@ describe('AdminDashboardPageComponent', () => {
         LoadingSpinnerModule,
         PanelChevronModule,
       ],
-      declarations: [AdminDashboardPageComponent],
+      declarations: [AdminDashboardPageComponent, SessionDashboardComponent],
     })
     .compileComponents();
   }));
