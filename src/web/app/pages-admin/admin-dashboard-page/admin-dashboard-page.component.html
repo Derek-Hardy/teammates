@@ -112,13 +112,7 @@
       </div>
       <div class="card-body session-table-body" *ngIf="institutionPanelsStatus[mapping.key]" @collapseAnim>
         <div class="table-responsive">
-          <p style="text-align: center; padding: 10px;">
-            D3 graph placeholder
-          </p>
           <table class="table table-striped data-table session-table" id="ongoing-sessions-table">
-            <thead>
-              [{{ mapping.key }}]
-            </thead>
             <tbody>
             <tr *ngFor="let session of mapping.value; let i = index">
               <td>
