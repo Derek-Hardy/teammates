@@ -19,8 +19,8 @@ public class LogicExtension extends Logic {
     }
 
     public FeedbackResponseAttributes getFeedbackResponse(
-            String feedbackQuestionId, String giverEmail, String recipient) {
-        return feedbackResponsesLogic.getFeedbackResponse(feedbackQuestionId, giverEmail, recipient);
+            String feedbackQuestionId, String giverEmail, String recipient, String createdTime) {
+        return feedbackResponsesLogic.getFeedbackResponse(feedbackQuestionId, giverEmail, recipient, createdTime);
     }
 
     public FeedbackResponseCommentAttributes getFeedbackResponseComment(

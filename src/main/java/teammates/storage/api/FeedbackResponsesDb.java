@@ -2,8 +2,13 @@ package teammates.storage.api;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -20,6 +25,7 @@ import teammates.common.exception.EntityAlreadyExistsException;
 import teammates.common.exception.EntityDoesNotExistException;
 import teammates.common.exception.InvalidParametersException;
 import teammates.common.util.Assumption;
+import teammates.common.util.Logger;
 import teammates.storage.entity.FeedbackResponse;
 
 /**
@@ -29,6 +35,8 @@ import teammates.storage.entity.FeedbackResponse;
  * @see FeedbackResponseAttributes
  */
 public class FeedbackResponsesDb extends EntitiesDb<FeedbackResponse, FeedbackResponseAttributes> {
+
+    private static final Logger log = Logger.getLogger();
 
     /**
      * Gets a set of giver identifiers that has at least one response under a feedback session.
@@ -57,6 +65,58 @@ public class FeedbackResponsesDb extends EntitiesDb<FeedbackResponse, FeedbackRe
     }
 
     /**
+     * Gets a list of numbers of new response submissions made in the past 12 hours under a feedback session.
+     */
+    public List<String> getRecentResponseSubmissionStats(String courseId, String feedbackSessionName) {
+        Assumption.assertNotNull(courseId);
+        Assumption.assertNotNull(feedbackSessionName);
+
+        List<Key<FeedbackResponse>> keysOfResponses =
+                load().filter("courseId =", courseId)
+                        .filter("feedbackSessionName =", feedbackSessionName)
+                        .keys()
+                        .list();
+
+        // the following process makes use of the key pattern of feedback response entity
+        // see generateId() in FeedbackResponse.java
+        Instant now = Instant.now();
+        int[] stats = new int[13];
+
+        for (Key<FeedbackResponse> key : keysOfResponses) {
+            String[] tokens = key.getName().split("%");
+            if (tokens.length >= 4) {
+                Instant time = Instant.parse(tokens[3]);
+                for (int hour = 1; hour <= 12; hour++) {
+                    Instant limit = now.minus(hour, ChronoUnit.HOURS);
+                    int val = time.compareTo(limit);
+                    if (val >= 0) {
+                        stats[hour]++;
+                        break;
+                    }
+                }
+            }
+        }
+
+        List<String> res = new ArrayList<>();
+        String minutePad = ":00";
+        String timePad = "0";
+
+        for (int i = 12; i >= 1; i--) {
+            String formatHour;
+            int hour = now.minus(i, ChronoUnit.HOURS).atZone(ZoneId.of("Asia/Singapore")).getHour();
+            if (hour < 10) {
+                formatHour = timePad + hour + minutePad;
+            } else {
+                formatHour = hour + minutePad;
+            }
+            log.info("formatHour: " + formatHour + " total :" + stats[i]);
+            res.add(formatHour + "%" + stats[i]);
+        }
+
+        return res;
+    }
+
+    /**
      * Gets a feedback response.
      */
     public FeedbackResponseAttributes getFeedbackResponse(String feedbackResponseId) {
@@ -71,13 +131,14 @@ public class FeedbackResponsesDb extends EntitiesDb<FeedbackResponse, FeedbackRe
      * Gets a feedback response by unique constraint question-giver-receiver.
      */
     public FeedbackResponseAttributes getFeedbackResponse(
-            String feedbackQuestionId, String giverEmail, String receiverEmail) {
+            String feedbackQuestionId, String giverEmail, String receiverEmail, String createdTime) {
         Assumption.assertNotNull(feedbackQuestionId);
         Assumption.assertNotNull(giverEmail);
         Assumption.assertNotNull(receiverEmail);
 
         FeedbackResponse fr =
-                getFeedbackResponseEntity(FeedbackResponse.generateId(feedbackQuestionId, giverEmail, receiverEmail));
+                getFeedbackResponseEntity(
+                        FeedbackResponse.generateId(feedbackQuestionId, giverEmail, receiverEmail, createdTime));
 
         return makeAttributesOrNull(fr);
     }
@@ -409,7 +470,8 @@ public class FeedbackResponsesDb extends EntitiesDb<FeedbackResponse, FeedbackRe
         return !load()
                 .filterKey(Key.create(FeedbackResponse.class,
                         FeedbackResponse.generateId(entityToCreate.getFeedbackQuestionId(),
-                                entityToCreate.getGiver(), entityToCreate.getRecipient())))
+                                entityToCreate.getGiver(), entityToCreate.getRecipient(),
+                                entityToCreate.getCreatedAt().toString())))
                 .list()
                 .isEmpty();
     }

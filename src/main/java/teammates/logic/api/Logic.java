@@ -1108,6 +1108,16 @@ public class Logic {
     }
 
     /**
+     * Gets a list of numbers of new response submissions made in the past 12 hours under a feedback session.
+     */
+    public List<String> getRecentResponseSubmissionStats(String courseId, String feedbackSessionName) {
+        Assumption.assertNotNull(courseId);
+        Assumption.assertNotNull(feedbackSessionName);
+
+        return feedbackResponsesLogic.getRecentResponseSubmissionStats(courseId, feedbackSessionName);
+    }
+
+    /**
      * Gets the session result for a feedback session.
      *
      * @see FeedbackSessionsLogic#getSessionResultsForUser(String, String, String, UserRole, String, String)
